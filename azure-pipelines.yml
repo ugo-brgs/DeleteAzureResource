@@ -6,23 +6,23 @@
 trigger:
 - main
 
-pool: "default"
+pool:
+  vmImage: 'windows-latest'
 
 variables:
-- name: SubscriptionID
-  value: '23a859c1-062c-45bf-a863-2a4341b55444'
+  SubscriptionID: '23a859c1-062c-45bf-a863-2a4341b55444'  # ton ID
 
 steps:
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: 'Azure subscription 1(23a859c1-062c-45bf-a863-2a4341b55444)'
-    scriptType: 'ps'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
-      # Lister et supprimer les ressources
-      az resource list --subscription $(23a859c1-062c-45bf-a863-2a4341b55444) --query "[].id" -o tsv
-      $resources = az resource list --subscription $(23a859c1-062c-45bf-a863-2a4341b55444) --query "[].id" -o tsv
-      foreach ($resource in $resources) {
-          write-host $resource
-          az resource delete --ids $resource
-      }
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: 'Azure subscription 1(23a859c1-062c-45bf-a863-2a4341b55444)'
+      scriptType: 'ps'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        Write-Host "Listing resources in subscription $(SubscriptionID)..."
+        $resources = az resource list --subscription $(SubscriptionID) --query "[].id" -o tsv
+        foreach ($resource in $resources) {
+          Write-Host "Deleting $resource"
+          az resource delete --ids $resource
+        }
+    displayName: 'Delete all Azure resources'
