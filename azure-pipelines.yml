@@ -6,8 +6,7 @@
 trigger:
 - main
 
-pool:
-  vmImage: 'windows-latest'
+pool: "default"
 
 variables:
   SubscriptionID: '23a859c1-062c-45bf-a863-2a4341b55444'  # ton ID
