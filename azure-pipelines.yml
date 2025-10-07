@@ -1,0 +1,28 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool: "default"
+
+variables:
+- name: SubscriptionID
+  value: '23a859c1-062c-45bf-a863-2a4341b55444'
+
+steps:
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'Azure subscription 1(23a859c1-062c-45bf-a863-2a4341b55444)'
+    scriptType: 'ps'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      # Lister et supprimer les ressources
+      az resource list --subscription $(23a859c1-062c-45bf-a863-2a4341b55444) --query "[].id" -o tsv
+      $resources = az resource list --subscription $(23a859c1-062c-45bf-a863-2a4341b55444) --query "[].id" -o tsv
+      foreach ($resource in $resources) {
+          write-host $resource
+          az resource delete --ids $resource
+      }
